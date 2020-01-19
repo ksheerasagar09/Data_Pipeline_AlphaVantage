@@ -16,3 +16,5 @@ Steps:
  rommes is used to extract data from the end points. Parameters are configured in parameters file to pull the stocks and currencies that we are interested in.
  
  After inserting data into the tables, data is read into Pandas DataFrame using SQL queries. 
+
+USE Airflow DAGS for workflow management and orchestration
