@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
-
-
 import os
 import time as t
 from matplotlib.pyplot import figure
@@ -19,42 +16,15 @@ from alpha_vantage.foreignexchange import ForeignExchange
 from flask import Flask, Response, stream_with_context
 api_key = os.environ['API_KEY']
 
-
-# In[36]:
-
-
 from alpha_vantage.timeseries import TimeSeries
 ts = TimeSeries(key=api_key)
 data, meta_data = ts.get_intraday('GOOGL')
 
 
-# In[31]:
-
-
 meta_data
-
-
-# In[34]:
-
 
 ts = TimeSeries(key=api_key)
 data, meta_data = ts.get_intraday('GOOGL')
-
-
-# In[33]:
-
-
-meta_data
-
-
-# In[35]:
-
-
-data
-
-
-# In[6]:
-
 
 cur = conn.cursor()
 cur.execute("""
@@ -90,9 +60,6 @@ cur.execute("""
 conn.commit()
 
 
-# In[38]:
-
-
 import time
 while True:
     ts = TimeSeries(key=api_key)
@@ -116,9 +83,7 @@ while True:
             time.sleep(60)
 
 
-# In[3]:
-
-
+#  Main 
 import psycopg2
 conn = psycopg2.connect(dbname = 'ksheerasagar' , user = 'postgres', password = 'postgres')
 cur = conn.cursor()
