@@ -1,0 +1,95 @@
+# Create Tables in postgres database for loading real time data
+import psycopg2
+
+def create_conn_with_db():
+    """
+    Establishes a postgres connection to the default db postgres, drops if any database exists with the name
+    alphavantage_db and creates a new database
+    """
+    conn = psycopg2.connect(dbname='postgres', user='postgres', password='postgres')
+    cur = conn.cursor()
+
+    """Returns:
+    cur -- postgres cursor object for executing SQL queries
+    conn -- postgres connection object after establishing a connection
+    """
+
+    # connect to default database postgres
+    conn = psycopg2.connect(dbname="postgres", user="postgres", password="postgres")
+    conn.set_session(autocommit=True)
+    cur = conn.cursor()
+
+    # create alphavantage_db database with UTF8 encoding
+    cur.execute("DROP DATABASE if exists alphavantage_db")
+    cur.execute("CREATE DATABASE alphavantage_db WITH ENCODING 'utf8' TEMPLATE template0")
+
+    # close connection to default database
+    conn.close()
+
+    # connect to Alphavantage_db database
+    conn = psycopg2.connect(dbname="alphavantage_db", user="postgres", password="postgres")
+    cur = conn.cursor()
+
+    return cur, conn
+
+
+def create_tables(cur, conn):
+    cur.execute(
+        """CREATE TABLE IF NOT EXISTS Stock_Data_Intraday (
+       Last_Refreshed timestamp ,
+       Symbol varchar(10),
+       Open_Price real,
+       High_Price real,
+       Low_Price real,
+       Close_Price real,
+       Volume int);
+       """
+    )
+
+
+    cur.execute("""
+       CREATE TABLE IF NOT EXISTS Currency_Exchange_Rate_Intraday (
+           Last_Refreshed timestamp,
+           Timezone varchar(10),
+           From_Currency_Code varchar(10),
+           From_Currency_Name varchar(100),
+           To_Currency_Code varchar(10),
+           To_Currency_Name varchar(100),
+           Open_Price real,
+           High_Price real,
+           Low_Price real,
+           Close_Price real
+      );
+    """)
+    cur.execute("""CREATE TABLE IF NOT EXISTS Cryptocurrency_Data_Daily 
+        (Last_Refreshed timestamp,
+           Timezone varchar(10),
+           Digital_Currency_Code varchar(10),
+           Digital_Currency_Name varchar(100),
+           Market_Code varchar(10),
+           Market_Name varchar(100),Open_INR real, Open_USD real,
+           High_INR real,
+           High_USD real,
+           Low_INR real,
+           Low_USD real,
+           Close_INR real,
+           Close_USD real,
+           Volume real,
+           Market_CAP real
+      );
+      """)
+    conn.commit()
+
+
+def createtables():
+    """
+    Main function to create alphavantage_db and creating a connection object,
+    once the db is created,tables are created for loading data
+
+    """
+    cur, conn = create_conn_with_db()
+    create_tables(cur, conn)
+    conn.close()
+
+if __name__ == "__main__":
+    createtables()

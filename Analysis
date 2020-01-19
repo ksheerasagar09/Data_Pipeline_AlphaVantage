@@ -1,0 +1,26 @@
+import psycopg2
+import pandas as pd
+import matplotlib.pyplot as plt
+conn = psycopg2.connect(dbname = 'alphavantage_db' , user = 'postgres', password = 'postgres')
+cur = conn.cursor()
+SQL = """SELECT last_refreshed,close_price
+                FROM stock_data_intraday 
+                WHERE last_refreshed BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+                        and symbol in ('AMZN')"""
+stock_data_amzn = pd.read_sql(SQL,conn)
+SQL = """SELECT last_refreshed,close_price
+            FROM stock_data_intraday 
+            WHERE last_refreshed BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+                    and symbol in ('MSFT')"""
+stock_data_msft = pd.read_sql(SQL,conn)
+SQL = """SELECT last_refreshed,close_price
+                FROM stock_data_intraday 
+                WHERE last_refreshed BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+                      and symbol in ('GOOGL')"""
+stock_data_googl = pd.read_sql(SQL,conn)
+SQL = """SELECT last_refreshed,close_price
+                FROM stock_data_intraday 
+                WHERE last_refreshed BETWEEN NOW() - INTERVAL '24 HOURS' AND NOW()
+                      and symbol in ('FB')"""
+stock_data_fb = pd.read_sql(SQL,conn)
+stock_data_amzn['close_price'].plot()
